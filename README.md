@@ -50,6 +50,7 @@ Learn how to use the Verum Dezyne model to create a simple yet fully functional 
 #include <dzn/locator.hh>
 #include <dzn/runtime.hh>
 #include "alarm.hh"
+```
 
 ### Initializing the Dezyne Component
 
