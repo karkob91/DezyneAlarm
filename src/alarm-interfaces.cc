@@ -29,22 +29,22 @@
 #define STRINGIZING(x) #x
 #define STR(x) STRINGIZING (x)
 #define LOCATION __FILE__ ":" STR (__LINE__)
-iconsole::iconsole (dzn::port::meta const& m)
+IConsole::IConsole (dzn::port::meta const& m)
 : dzn_meta (m)
 , dzn_share_p (true)
 , dzn_label ("")
 , dzn_state ()
-, state (::iconsole::State::Disarmed)
+, state (::IConsole::State::Disarmed)
 {}
-iconsole::~iconsole ()= default;
+IConsole::~IConsole ()= default;
 void
-iconsole::dzn_event (char const* event)
+IConsole::dzn_event (char const* event)
 {
   if (!dzn_share_p) return;
   dzn_label = event;
 }
 void
-iconsole::dzn_update_state (dzn::locator const& locator)
+IConsole::dzn_update_state (dzn::locator const& locator)
 {
   if (!dzn_share_p || !dzn_label) return;
   switch (dzn::hash (dzn_label, dzn_state))
@@ -60,7 +60,7 @@ iconsole::dzn_update_state (dzn::locator const& locator)
       case 2489929490u:
       //1:false
       dzn_state = 0;
-      state = iconsole::State::Disarmed;
+      state = IConsole::State::Disarmed;
       break;
       case 2448250922u:
       //2:arm
@@ -69,12 +69,12 @@ iconsole::dzn_update_state (dzn::locator const& locator)
       case 4133793833u:
       //2:armed
       dzn_state = 7;
-      state = iconsole::State::Armed;
+      state = IConsole::State::Armed;
       break;
       case 1417291230u:
       //3:true
       dzn_state = 0;
-      state = iconsole::State::Disarmed;
+      state = IConsole::State::Disarmed;
       break;
       case 3242569230u:
       //4:disarmed
@@ -83,12 +83,12 @@ iconsole::dzn_update_state (dzn::locator const& locator)
       case 2489929727u:
       //4:false
       dzn_state = 2;
-      state = iconsole::State::Arming;
+      state = IConsole::State::Arming;
       break;
       case 1417291467u:
       //6:true
       dzn_state = 2;
-      state = iconsole::State::Arming;
+      state = IConsole::State::Arming;
       break;
       case 2448251317u:
       //7:arm
@@ -97,7 +97,7 @@ iconsole::dzn_update_state (dzn::locator const& locator)
       case 1999778198u:
       //7:detected
       dzn_state = 9;
-      state = iconsole::State::Triggered;
+      state = IConsole::State::Triggered;
       break;
       case 3242569546u:
       //8:disarmed
@@ -106,7 +106,7 @@ iconsole::dzn_update_state (dzn::locator const& locator)
       case 2489930043u:
       //8:false
       dzn_state = 7;
-      state = iconsole::State::Armed;
+      state = IConsole::State::Armed;
       break;
       case 2448251475u:
       //9:arm
@@ -119,13 +119,13 @@ iconsole::dzn_update_state (dzn::locator const& locator)
       case 3430895307u:
       //10:false
       dzn_state = 9;
-      state = iconsole::State::Triggered;
+      state = IConsole::State::Triggered;
       break;
       default: locator.get<dzn::illegal_handler> ().handle (LOCATION);
     }
 }
 void
-iconsole::dzn_check_bindings ()
+IConsole::dzn_check_bindings ()
 {
   if (!this->in.arm) throw dzn::binding_error (this->dzn_meta, "in.arm");
   if (!this->out.armed) throw dzn::binding_error (this->dzn_meta, "out.armed");
@@ -136,21 +136,21 @@ iconsole::dzn_check_bindings ()
 namespace dzn
 {
 }
-ipin::ipin (dzn::port::meta const& m)
+IPin::IPin (dzn::port::meta const& m)
 : dzn_meta (m)
 , dzn_share_p (true)
 , dzn_label ("")
 , dzn_state ()
 {}
-ipin::~ipin ()= default;
+IPin::~IPin ()= default;
 void
-ipin::dzn_event (char const* event)
+IPin::dzn_event (char const* event)
 {
   if (!dzn_share_p) return;
   dzn_label = event;
 }
 void
-ipin::dzn_update_state (dzn::locator const& locator)
+IPin::dzn_update_state (dzn::locator const& locator)
 {
   if (!dzn_share_p || !dzn_label) return;
   switch (dzn::hash (dzn_label, dzn_state))
@@ -171,28 +171,28 @@ ipin::dzn_update_state (dzn::locator const& locator)
     }
 }
 void
-ipin::dzn_check_bindings ()
+IPin::dzn_check_bindings ()
 {
   if (!this->in.valid) throw dzn::binding_error (this->dzn_meta, "in.valid");
 }
 namespace dzn
 {
 }
-isensor::isensor (dzn::port::meta const& m)
+ISensor::ISensor (dzn::port::meta const& m)
 : dzn_meta (m)
 , dzn_share_p (true)
 , dzn_label ("")
 , dzn_state ()
 {}
-isensor::~isensor ()= default;
+ISensor::~ISensor ()= default;
 void
-isensor::dzn_event (char const* event)
+ISensor::dzn_event (char const* event)
 {
   if (!dzn_share_p) return;
   dzn_label = event;
 }
 void
-isensor::dzn_update_state (dzn::locator const& locator)
+ISensor::dzn_update_state (dzn::locator const& locator)
 {
   if (!dzn_share_p || !dzn_label) return;
   switch (dzn::hash (dzn_label, dzn_state))
@@ -205,29 +205,29 @@ isensor::dzn_update_state (dzn::locator const& locator)
     }
 }
 void
-isensor::dzn_check_bindings ()
+ISensor::dzn_check_bindings ()
 {
   if (!this->out.MovementDetected) throw dzn::binding_error (this->dzn_meta, "out.MovementDetected");
 }
 namespace dzn
 {
 }
-isiren::isiren (dzn::port::meta const& m)
+ISiren::ISiren (dzn::port::meta const& m)
 : dzn_meta (m)
 , dzn_share_p (true)
 , dzn_label ("")
 , dzn_state ()
 , enabled (false)
 {}
-isiren::~isiren ()= default;
+ISiren::~ISiren ()= default;
 void
-isiren::dzn_event (char const* event)
+ISiren::dzn_event (char const* event)
 {
   if (!dzn_share_p) return;
   dzn_label = event;
 }
 void
-isiren::dzn_update_state (dzn::locator const& locator)
+ISiren::dzn_update_state (dzn::locator const& locator)
 {
   if (!dzn_share_p || !dzn_label) return;
   switch (dzn::hash (dzn_label, dzn_state))
@@ -262,7 +262,7 @@ isiren::dzn_update_state (dzn::locator const& locator)
     }
 }
 void
-isiren::dzn_check_bindings ()
+ISiren::dzn_check_bindings ()
 {
   if (!this->in.disable) throw dzn::binding_error (this->dzn_meta, "in.disable");
   if (!this->in.enable) throw dzn::binding_error (this->dzn_meta, "in.enable");
@@ -270,22 +270,22 @@ isiren::dzn_check_bindings ()
 namespace dzn
 {
 }
-itimer::itimer (dzn::port::meta const& m)
+ITimer::ITimer (dzn::port::meta const& m)
 : dzn_meta (m)
 , dzn_share_p (true)
 , dzn_label ("")
 , dzn_state ()
 , idle (true)
 {}
-itimer::~itimer ()= default;
+ITimer::~ITimer ()= default;
 void
-itimer::dzn_event (char const* event)
+ITimer::dzn_event (char const* event)
 {
   if (!dzn_share_p) return;
   dzn_label = event;
 }
 void
-itimer::dzn_update_state (dzn::locator const& locator)
+ITimer::dzn_update_state (dzn::locator const& locator)
 {
   if (!dzn_share_p || !dzn_label) return;
   switch (dzn::hash (dzn_label, dzn_state))
@@ -325,7 +325,7 @@ itimer::dzn_update_state (dzn::locator const& locator)
     }
 }
 void
-itimer::dzn_check_bindings ()
+ITimer::dzn_check_bindings ()
 {
   if (!this->in.set) throw dzn::binding_error (this->dzn_meta, "in.set");
   if (!this->in.cancel) throw dzn::binding_error (this->dzn_meta, "in.cancel");

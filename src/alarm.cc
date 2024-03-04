@@ -31,8 +31,8 @@
 #define STRINGIZING(x) #x
 #define STR(x) STRINGIZING (x)
 #define LOCATION __FILE__ ":" STR (__LINE__)
-alarm_controller::alarm_controller (dzn::locator const& locator)
-: dzn_meta ({"alarm_controller","alarm_controller",0,  {},  {},  {[this] ()
+AlarmController::AlarmController (dzn::locator const& locator)
+: dzn_meta ({"AlarmController","AlarmController",0,  {},  {},  {[this] ()
         {
           console.dzn_check_bindings ();
         }, [this] ()
@@ -75,9 +75,9 @@ alarm_controller::alarm_controller (dzn::locator const& locator)
     };
 }
 void
-alarm_controller::console_arm (int pin)
+AlarmController::console_arm (int pin)
 {
-  if (console.state == ::iconsole::State::Disarmed)
+  if (console.state == ::IConsole::State::Disarmed)
     {
       bool valid = this->auth.in.valid (pin);
       if (valid)
@@ -89,7 +89,7 @@ alarm_controller::console_arm (int pin)
       if ((*this->dzn_out_console)) (*this->dzn_out_console) ();
       (*this->dzn_out_console) = nullptr;
     }
-  else if (console.state == ::iconsole::State::Arming)
+  else if (console.state == ::IConsole::State::Arming)
     {
       bool valid = this->auth.in.valid (pin);
       if (valid)
@@ -101,7 +101,7 @@ alarm_controller::console_arm (int pin)
       if ((*this->dzn_out_console)) (*this->dzn_out_console) ();
       (*this->dzn_out_console) = nullptr;
     }
-  else if (console.state == ::iconsole::State::Armed)
+  else if (console.state == ::IConsole::State::Armed)
     {
       bool valid = this->auth.in.valid (pin);
       if (valid)
@@ -112,7 +112,7 @@ alarm_controller::console_arm (int pin)
       if ((*this->dzn_out_console)) (*this->dzn_out_console) ();
       (*this->dzn_out_console) = nullptr;
     }
-  else if (console.state == ::iconsole::State::Triggered)
+  else if (console.state == ::IConsole::State::Triggered)
     {
       bool valid = this->auth.in.valid (pin);
       if (valid)
@@ -128,35 +128,35 @@ alarm_controller::console_arm (int pin)
       if ((*this->dzn_out_console)) (*this->dzn_out_console) ();
       (*this->dzn_out_console) = nullptr;
     }
-  else if (!(console.state == ::iconsole::State::Triggered) && (!(console.state == ::iconsole::State::Armed) && (!(console.state == ::iconsole::State::Arming) && !(console.state == ::iconsole::State::Disarmed)))) this->dzn_locator.get<dzn::illegal_handler> ().handle (LOCATION);
+  else if (!(console.state == ::IConsole::State::Triggered) && (!(console.state == ::IConsole::State::Armed) && (!(console.state == ::IConsole::State::Arming) && !(console.state == ::IConsole::State::Disarmed)))) this->dzn_locator.get<dzn::illegal_handler> ().handle (LOCATION);
   else this->dzn_locator.get<dzn::illegal_handler> ().handle (LOCATION);
 }
 void
-alarm_controller::sensor_MovementDetected ()
+AlarmController::sensor_MovementDetected ()
 {
-  if (console.state == ::iconsole::State::Disarmed)   {}
-  else if (console.state == ::iconsole::State::Arming)   {}
-  else if (console.state == ::iconsole::State::Armed)
+  if (console.state == ::IConsole::State::Disarmed)   {}
+  else if (console.state == ::IConsole::State::Arming)   {}
+  else if (console.state == ::IConsole::State::Armed)
     {
       this->console.out.detected ();
       this->timer.in.set (5000);
     }
-  else if (console.state == ::iconsole::State::Triggered)   {}
-  else if (!(console.state == ::iconsole::State::Triggered) && (!(console.state == ::iconsole::State::Armed) && (!(console.state == ::iconsole::State::Arming) && !(console.state == ::iconsole::State::Disarmed)))) this->dzn_locator.get<dzn::illegal_handler> ().handle (LOCATION);
+  else if (console.state == ::IConsole::State::Triggered)   {}
+  else if (!(console.state == ::IConsole::State::Triggered) && (!(console.state == ::IConsole::State::Armed) && (!(console.state == ::IConsole::State::Arming) && !(console.state == ::IConsole::State::Disarmed)))) this->dzn_locator.get<dzn::illegal_handler> ().handle (LOCATION);
   else this->dzn_locator.get<dzn::illegal_handler> ().handle (LOCATION);
 }
 void
-alarm_controller::timer_timeout ()
+AlarmController::timer_timeout ()
 {
-  if (console.state == ::iconsole::State::Arming)
+  if (console.state == ::IConsole::State::Arming)
     {
       this->console.out.armed ();
     }
-  else if (console.state == ::iconsole::State::Triggered)
+  else if (console.state == ::IConsole::State::Triggered)
     {
       this->siren.in.enable ();
     }
-  else if (!(console.state == ::iconsole::State::Triggered) && !(console.state == ::iconsole::State::Arming)) this->dzn_locator.get<dzn::illegal_handler> ().handle (LOCATION);
+  else if (!(console.state == ::IConsole::State::Triggered) && !(console.state == ::IConsole::State::Arming)) this->dzn_locator.get<dzn::illegal_handler> ().handle (LOCATION);
   else this->dzn_locator.get<dzn::illegal_handler> ().handle (LOCATION);
 }
 // version 2.18.0

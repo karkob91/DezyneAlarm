@@ -26,13 +26,13 @@
 
 import alarm-interfaces.dzn;
 
-component alarm_controller
+component AlarmController
 {
-  provides iconsole console;
-  requires isiren siren;
-  requires isensor sensor;
-  requires itimer timer;
-  requires ipin auth;
+  provides IConsole console;
+  requires ISiren siren;
+  requires ISensor sensor;
+  requires ITimer timer;
+  requires IPin auth;
 
   behavior
   {

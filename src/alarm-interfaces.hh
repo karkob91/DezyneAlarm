@@ -33,7 +33,7 @@ namespace dzn
 #include <map>
 #ifndef ICONSOLE_HH
 #define ICONSOLE_HH
-struct iconsole
+struct IConsole
 {
   enum struct State
     {
@@ -54,15 +54,15 @@ struct iconsole
   bool dzn_share_p;
   char const* dzn_label;
   int dzn_state;
-  ::iconsole::State state;
-  iconsole (dzn::port::meta const& m);
+  ::IConsole::State state;
+  IConsole (dzn::port::meta const& m);
   template <typename Component>
-  iconsole (dzn::port::meta const& m, Component* that)
+  IConsole (dzn::port::meta const& m, Component* that)
   : dzn_meta (m)
   , dzn_share_p (true)
   , dzn_label ("")
   , dzn_state ()
-  , state (::iconsole::State::Disarmed)
+  , state (::IConsole::State::Disarmed)
     {
       in.arm.set (that, this, "arm");
       out.armed.set (that, this, "armed");
@@ -70,14 +70,14 @@ struct iconsole
       out.arming.set (that, this, "arming");
       out.detected.set (that, this, "detected");
     }
-  virtual ~iconsole ();
+  virtual ~IConsole ();
   void dzn_event (char const* event);
   void dzn_update_state (dzn::locator const& locator);
   void dzn_check_bindings ();
 };
 namespace dzn
 {
-  inline void connect (::iconsole& provide, ::iconsole& require)
+  inline void connect (::IConsole& provide, ::IConsole& require)
     {
       provide.out.armed = require.out.armed;
       provide.out.disarmed = require.out.disarmed;
@@ -92,7 +92,7 @@ namespace dzn
 #endif // ICONSOLE_HH
 #ifndef IPIN_HH
 #define IPIN_HH
-struct ipin
+struct IPin
 {
   dzn::port::meta dzn_meta;
   struct
@@ -105,9 +105,9 @@ struct ipin
   bool dzn_share_p;
   char const* dzn_label;
   int dzn_state;
-  ipin (dzn::port::meta const& m);
+  IPin (dzn::port::meta const& m);
   template <typename Component>
-  ipin (dzn::port::meta const& m, Component* that)
+  IPin (dzn::port::meta const& m, Component* that)
   : dzn_meta (m)
   , dzn_share_p (true)
   , dzn_label ("")
@@ -115,14 +115,14 @@ struct ipin
     {
       in.valid.set (that, this, "valid");
     }
-  virtual ~ipin ();
+  virtual ~IPin ();
   void dzn_event (char const* event);
   void dzn_update_state (dzn::locator const& locator);
   void dzn_check_bindings ();
 };
 namespace dzn
 {
-  inline void connect (::ipin& provide, ::ipin& require)
+  inline void connect (::IPin& provide, ::IPin& require)
     {
       require.in.valid = provide.in.valid;
       provide.dzn_meta.require = require.dzn_meta.require;
@@ -133,7 +133,7 @@ namespace dzn
 #endif // IPIN_HH
 #ifndef ISENSOR_HH
 #define ISENSOR_HH
-struct isensor
+struct ISensor
 {
   dzn::port::meta dzn_meta;
   struct
@@ -146,9 +146,9 @@ struct isensor
   bool dzn_share_p;
   char const* dzn_label;
   int dzn_state;
-  isensor (dzn::port::meta const& m);
+  ISensor (dzn::port::meta const& m);
   template <typename Component>
-  isensor (dzn::port::meta const& m, Component* that)
+  ISensor (dzn::port::meta const& m, Component* that)
   : dzn_meta (m)
   , dzn_share_p (true)
   , dzn_label ("")
@@ -156,14 +156,14 @@ struct isensor
     {
       out.MovementDetected.set (that, this, "MovementDetected");
     }
-  virtual ~isensor ();
+  virtual ~ISensor ();
   void dzn_event (char const* event);
   void dzn_update_state (dzn::locator const& locator);
   void dzn_check_bindings ();
 };
 namespace dzn
 {
-  inline void connect (::isensor& provide, ::isensor& require)
+  inline void connect (::ISensor& provide, ::ISensor& require)
     {
       provide.out.MovementDetected = require.out.MovementDetected;
       provide.dzn_meta.require = require.dzn_meta.require;
@@ -174,7 +174,7 @@ namespace dzn
 #endif // ISENSOR_HH
 #ifndef ISIREN_HH
 #define ISIREN_HH
-struct isiren
+struct ISiren
 {
   dzn::port::meta dzn_meta;
   struct
@@ -189,9 +189,9 @@ struct isiren
   char const* dzn_label;
   int dzn_state;
   bool enabled;
-  isiren (dzn::port::meta const& m);
+  ISiren (dzn::port::meta const& m);
   template <typename Component>
-  isiren (dzn::port::meta const& m, Component* that)
+  ISiren (dzn::port::meta const& m, Component* that)
   : dzn_meta (m)
   , dzn_share_p (true)
   , dzn_label ("")
@@ -201,14 +201,14 @@ struct isiren
       in.disable.set (that, this, "disable");
       in.enable.set (that, this, "enable");
     }
-  virtual ~isiren ();
+  virtual ~ISiren ();
   void dzn_event (char const* event);
   void dzn_update_state (dzn::locator const& locator);
   void dzn_check_bindings ();
 };
 namespace dzn
 {
-  inline void connect (::isiren& provide, ::isiren& require)
+  inline void connect (::ISiren& provide, ::ISiren& require)
     {
       require.in.disable = provide.in.disable;
       require.in.enable = provide.in.enable;
@@ -220,7 +220,7 @@ namespace dzn
 #endif // ISIREN_HH
 #ifndef ITIMER_HH
 #define ITIMER_HH
-struct itimer
+struct ITimer
 {
   dzn::port::meta dzn_meta;
   struct
@@ -236,9 +236,9 @@ struct itimer
   char const* dzn_label;
   int dzn_state;
   bool idle;
-  itimer (dzn::port::meta const& m);
+  ITimer (dzn::port::meta const& m);
   template <typename Component>
-  itimer (dzn::port::meta const& m, Component* that)
+  ITimer (dzn::port::meta const& m, Component* that)
   : dzn_meta (m)
   , dzn_share_p (true)
   , dzn_label ("")
@@ -249,14 +249,14 @@ struct itimer
       in.cancel.set (that, this, "cancel");
       out.timeout.set (that, this, "timeout");
     }
-  virtual ~itimer ();
+  virtual ~ITimer ();
   void dzn_event (char const* event);
   void dzn_update_state (dzn::locator const& locator);
   void dzn_check_bindings ();
 };
 namespace dzn
 {
-  inline void connect (::itimer& provide, ::itimer& require)
+  inline void connect (::ITimer& provide, ::ITimer& require)
     {
       provide.out.timeout = require.out.timeout;
       require.in.set = provide.in.set;

@@ -34,26 +34,26 @@ namespace dzn
 #include <vector>
 #include <map>
 #include "alarm-interfaces.hh"
-#ifndef ALARM_CONTROLLER_HH
-#define ALARM_CONTROLLER_HH
+#ifndef ALARMCONTROLLER_HH
+#define ALARMCONTROLLER_HH
 #include "alarm-interfaces.hh"
-struct alarm_controller: public dzn::component
+struct AlarmController: public dzn::component
 {
   dzn::meta dzn_meta;
   dzn::runtime& dzn_runtime;
   dzn::locator const& dzn_locator;
   bool* dzn_reply_bool;
   std::function<void ()>* dzn_out_console;
-  ::iconsole console;
-  ::isiren siren;
-  ::isensor sensor;
-  ::itimer timer;
-  ::ipin auth;
-  alarm_controller (dzn::locator const& locator);
+  ::IConsole console;
+  ::ISiren siren;
+  ::ISensor sensor;
+  ::ITimer timer;
+  ::IPin auth;
+  AlarmController (dzn::locator const& locator);
   private:
   void console_arm (int pin);
   void sensor_MovementDetected ();
   void timer_timeout ();
 };
-#endif // ALARM_CONTROLLER_HH
+#endif // ALARMCONTROLLER_HH
 // version 2.18.0

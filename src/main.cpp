@@ -28,7 +28,7 @@
 // Global Variables
 dzn::runtime runtime;
 dzn::locator loc;
-std::unique_ptr<alarm_controller> alarm_comp;
+std::unique_ptr<AlarmController> alarm_comp;
 Timer alarmTimer;
 String inputString = "";
 bool pinEntered = false;
@@ -55,7 +55,7 @@ void setup() {
 
     // Initialize Dezyne locator and runtime
     loc.set(runtime);
-    alarm_comp = std::unique_ptr<alarm_controller>(new alarm_controller(loc));
+    alarm_comp = std::unique_ptr<AlarmController>(new AlarmController(loc));
 
     // Setup Dezyne component callbacks
     setupDezyneComponent();
@@ -88,7 +88,7 @@ void setupDezyneComponent(){
     alarm_comp->timer.in.set = [](int ms_delay){
         // Set a delay for actions like arming or triggering the siren
         // Dezyne allows direct access to internal state variables
-        if (alarm_comp->console.state == iconsole::State::Disarmed)
+        if (alarm_comp->console.state == IConsole::State::Disarmed)
           Serial.print("Arming in ");
         else
           Serial.print("Starting siren in ");
@@ -161,7 +161,7 @@ void serialEvent() {
 
 void detectMovement() {
     // Detect movement using PIR sensor when system is armed
-    if ((alarm_comp->console.state == iconsole::State::Armed) && (digitalRead(PIR_SENSOR_PIN) == HIGH)) {
+    if ((alarm_comp->console.state == IConsole::State::Armed) && (digitalRead(PIR_SENSOR_PIN) == HIGH)) {
         alarm_comp->sensor.out.MovementDetected();
     }
 }
