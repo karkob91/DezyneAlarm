@@ -66,6 +66,7 @@ std::unique_ptr<AlarmController> alarm_comp;
 ```cpp
 loc.set(runtime);
 alarm_comp = std::unique_ptr<AlarmController>(new AlarmController(loc));
+```
 
 ### Setting Up Callbacks:
 
@@ -127,3 +128,4 @@ void setupDezyneComponent(){
       // controlStatusLED(PWM_FREQUENCY_SLOW, DUTY_CYCLE_HALF); // Implement LED control
   };
 }
+```
