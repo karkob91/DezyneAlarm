@@ -60,6 +60,7 @@ Guide on initializing the Dezyne component, creating an empty pointer, and setti
 dzn::runtime runtime;
 dzn::locator loc;
 std::unique_ptr<AlarmController> alarm_comp;
+```
 
 ### Initialize Dezyne locator and runtime:
 
