@@ -1,0 +1,97 @@
+// Dezyne --- Dezyne command line tools
+// Copyright © 2024Karol Kobiela <karol.kobiela@verum.com>
+//
+// This file is part of Dezyne.
+//
+// Dezyne is free software: you can redistribute it and/or modify it
+// under the terms of the GNU Affero General Public License as
+// published by the Free Software Foundation, either version 3 of the
+// License, or (at your option) any later version.
+//
+// Dezyne is distributed in the hope that it will be useful, but
+// WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+// Affero General Public License for more details.
+//
+// You should have received a copy of the GNU Affero General Public
+// License along with Dezyne.  If not, see <http://www.gnu.org/licenses/>.
+//
+// Commentary:
+//
+// This model represents a correct (relying on the state of its ports)
+// working alarm that, upon a sensor change while being armed, sounds
+// the siren after a grace period.
+//
+// Code:
+
+import alarm-interfaces.dzn;
+
+component alarm_controller
+{
+  provides iconsole console;
+  requires isiren siren;
+  requires isensor sensor;
+  requires itimer timer;
+  requires ipin auth;
+
+  behavior
+  {
+    [console.state.Disarmed] {
+      on console.arm(pin): {
+        bool valid = auth.valid(pin);
+        if(valid) {
+          timer.set($5000$);
+          console.arming();
+        }
+        reply(valid);
+      }
+      on sensor.MovementDetected(): {}
+    }
+    [console.state.Arming] {
+      on console.arm(pin): {
+        bool valid = auth.valid(pin);
+        if (valid) {
+          timer.cancel();
+          console.disarmed();
+        }
+        reply(valid);
+      }
+      on sensor.MovementDetected(): {}
+      on timer.timeout(): {
+        console.armed();
+      }
+    }
+    [console.state.Armed] {
+      on console.arm(pin): {
+        bool valid = auth.valid(pin);
+        if (valid) {
+          console.disarmed();
+        }
+        reply(valid);
+      }
+      on sensor.MovementDetected(): {
+        console.detected();
+        timer.set($5000$);
+      }
+    }
+    [console.state.Triggered] {
+      on console.arm(pin): {
+        bool valid = auth.valid(pin);
+        if(valid) {
+          timer.cancel();
+          if(siren.enabled) {
+            siren.disable();
+          }
+          console.disarmed();
+        }
+        reply(valid);
+      }
+      on sensor.MovementDetected(): {
+        // Do nothing, system already know that movement was detected
+      }
+      on timer.timeout(): {
+        siren.enable();
+      }
+    }
+  }
+}

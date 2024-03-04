@@ -1,0 +1,132 @@
+// Dezyne --- Dezyne command line tools
+// Copyright © 2024Karol Kobiela <karol.kobiela@verum.com>
+//
+// This file is part of Dezyne.
+//
+// Dezyne is free software: you can redistribute it and/or modify it
+// under the terms of the GNU Affero General Public License as
+// published by the Free Software Foundation, either version 3 of the
+// License, or (at your option) any later version.
+//
+// Dezyne is distributed in the hope that it will be useful, but
+// WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+// Affero General Public License for more details.
+//
+// You should have received a copy of the GNU Affero General Public
+// License along with Dezyne.  If not, see <http://www.gnu.org/licenses/>.
+//
+// Commentary:
+//
+// These models represent the actors of the alarm component.
+//
+// Code:
+
+extern PIN $int$;
+extern Miliseconds $int$;
+
+interface iconsole
+{
+  in bool arm(PIN pin);
+  out void armed();
+  out void disarmed();
+  out void arming();
+  out void detected();
+
+  behavior
+  {
+    enum State {Disarmed, Arming, Armed, Triggered};
+    State state = State.Disarmed;
+
+    [state.Disarmed] {
+      on arm: {
+        state = State.Arming;
+        arming;
+        reply(true);
+      }
+      on arm: {
+        reply(false);
+      }
+      // on disarm: reply(false);
+    }
+    [state.Arming] {
+      on arm: {
+        state = State.Disarmed;
+        disarmed;
+        reply(true);
+      }
+      on arm: {reply(false);}
+      on inevitable: {
+        state = State.Armed;
+        armed;
+      }
+    }
+    [state.Armed || state.Triggered] {
+      on arm: {
+        state = State.Disarmed;
+        disarmed;
+        reply(true);
+      }
+      on arm: {
+        reply(false);
+      }
+    }
+    [state.Armed] on optional: {
+      state = State.Triggered;
+      detected;
+    }
+  }
+}
+
+interface ipin
+{
+  in bool valid(PIN pin);
+
+  behavior
+  {
+    on valid: reply(true);
+    on valid: reply(false);
+  }
+}
+
+interface isensor
+{
+  out void MovementDetected();
+  behavior
+  {
+    on inevitable: {
+      MovementDetected;
+    }
+
+  }
+}
+
+interface isiren
+{
+  in void disable();
+  in void enable();
+
+  behavior
+  {
+    bool enabled = false;
+    [enabled] on disable: enabled = false;
+    [!enabled] on enable: enabled = true;
+  }
+}
+
+interface itimer
+{
+  in void set(Miliseconds delay);
+  in void cancel();
+
+  out void timeout();
+
+  behavior
+  {
+    bool idle = true;
+
+    on set: idle = false;
+    on cancel: idle = true;
+    [!idle] on inevitable: {idle = true; timeout;}
+  }
+}
